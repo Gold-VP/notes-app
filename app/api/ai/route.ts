@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "deepseek/deepseek-chat:free",
+        model: "qwen/qwen3.6-plus-preview:free",
         messages: [{ role: "user", content: prompt }],
       }),
     });
