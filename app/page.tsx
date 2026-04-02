@@ -64,6 +64,10 @@ function NoteCard({ note, onDelete, onUpdate }: {
         body: JSON.stringify({ action, text }),
       });
       const data = await res.json();
+      if (data.error) {
+        alert("Ошибка AI: " + data.error);
+        return;
+      }
       if (action === "title") {
         setTitle(data.result);
         onUpdate(note.id, { title: data.result });
