@@ -1,7 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
-
-const genAI = new GoogleGenerativeAI(process.env.ANTHROPIC_API_KEY || "");
 
 export async function POST(req: Request) {
   try {
@@ -16,10 +13,24 @@ export async function POST(req: Request) {
     const prompt = prompts[action];
     if (!prompt) return NextResponse.json({ error: "Unknown action" }, { status: 400 });
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-    const response = await model.generateContent(prompt);
-    const result = response.response.text();
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.ANTHROPIC_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "meta-llama/llama-4-scout:free",
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
 
+    const data = await res.json();
+    if (data.error) {
+      console.error("OpenRouter error:", JSON.stringify(data.error));
+      return NextResponse.json({ error: data.error.message ?? JSON.stringify(data.error) }, { status: 500 });
+    }
+    const result = data.choices?.[0]?.message?.content ?? "";
     return NextResponse.json({ result });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
