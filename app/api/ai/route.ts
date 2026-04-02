@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "meta-llama/llama-4-scout:free",
+        model: "deepseek/deepseek-chat:free",
         messages: [{ role: "user", content: prompt }],
       }),
     });
