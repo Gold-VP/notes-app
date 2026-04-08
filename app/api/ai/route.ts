@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "qwen/qwen3.6-plus-preview:free",
+        model: "qwen/qwen-2.5-72b-instruct:free",
         messages: [{ role: "user", content: prompt }],
       }),
     });
